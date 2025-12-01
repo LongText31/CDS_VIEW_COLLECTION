@@ -1,0 +1,192 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName:       'Budget',
+  typeNamePlural: 'Budget'
+}
+
+@UI.chart: [
+
+  /****************************************************************************************
+    Default chart in the content area of the page
+   ****************************************************************************************/
+  {
+    qualifier:    'Default',
+    title:        'Amount By Fund',
+    description:  'Amount By Fund',
+    chartType:    #COLUMN,
+    dimensions:   [ 'Fund' ] ,
+    dimensionAttributes: [
+      { dimension: 'Fund', role: #CATEGORY } ],
+    measures:     [ 'AmountInGlobalCurrency' ] ,
+    measureAttributes: [
+      { measure: 'AmountInGlobalCurrency', role: #AXIS_1, asDataPoint: true }
+    ]
+  },
+
+  /****************************************************************************************
+    Chart annotations for visual filters
+   ****************************************************************************************/
+
+  // Fund
+  {
+    qualifier:    'FilterAmountByFund',
+    title:        'Amount By Fund',
+    chartType:    #BAR,
+    dimensions:   [ 'Fund' ],
+    measures:     [ 'AmountInGlobalCurrency' ],
+    dimensionAttributes: [
+      { dimension: 'Fund', role: #CATEGORY }
+    ],
+    measureAttributes: [
+      { measure: 'AmountInGlobalCurrency', role: #AXIS_1, asDataPoint: true }
+    ]
+  },
+  
+  // Fiscal Year
+  {
+    qualifier:    'FilterAmountByFiscalYear',
+    title:        'Amount By Fiscal Year',
+    chartType:    #LINE,
+    dimensions:   [ 'FiscalYear' ],
+    measures:     [ 'AmountInGlobalCurrency' ],
+    dimensionAttributes: [
+      { dimension: 'FiscalYear', role: #SERIES }
+    ],
+    measureAttributes: [
+      { measure: 'AmountInGlobalCurrency', role: #AXIS_1, asDataPoint: true }
+    ]
+  },
+
+  // Budgeting Type
+  {
+    qualifier:    'FilterAmountByBudgetingType',
+    title:        'Amount By Budgeting Type',
+    chartType:    #DONUT,
+    dimensions:   [ 'BudgetingType' ],
+    measures:     [ 'AmountInGlobalCurrency' ],
+    dimensionAttributes: [
+      { dimension: 'BudgetingType', role: #CATEGORY }
+    ],
+    measureAttributes: [
+      { measure: 'AmountInGlobalCurrency', role: #AXIS_1, asDataPoint: true }
+    ]
+  },
+  
+  // Cost Center
+  {
+    qualifier:    'FilterAmountByCostCenter',
+    title:        'Amount By Cost Center',
+    chartType:    #BAR,
+    dimensions:   [ 'CostCenter' ],
+    measures:     [ 'AmountInGlobalCurrency' ],
+    dimensionAttributes: [
+      { dimension: 'CostCenter', role: #CATEGORY }
+    ],
+    measureAttributes: [
+      { measure: 'AmountInGlobalCurrency', role: #AXIS_1, asDataPoint: true }
+    ]
+  }
+  
+ ]
+//-----------------------------------------------------------------------
+// Define how result of a queried collection is shaped and how it is displayed
+//------------------------------------------------------------------------
+
+@UI.presentationVariant: [
+
+  /****************************************************************************************
+    Default presentation variant for the page content
+   ****************************************************************************************/
+  {
+    qualifier: 'DefaultPresentationVariant',  
+    text:      'Default',
+    sortOrder: [
+     { by: 'Fund',   direction: #ASC },
+     { by: 'BudgetPeriod',    direction: #ASC },
+     { by: 'CostCenter', direction: #ASC },
+     { by: 'FiscalYear',   direction: #ASC }
+    ], 
+    visualizations: [
+      { type: #AS_CHART,    qualifier: 'Default' },
+      { type: #AS_LINEITEM, qualifier: 'Default' }
+    ]
+  },
+
+
+  /****************************************************************************************
+    Presentation variants for visual filters
+   ****************************************************************************************/
+   
+   // Fund
+  {
+    qualifier: 'FilterAmountByFund',
+    text:      'Filter: Amount by Fund',
+    maxItems:  3,
+    sortOrder: [
+      { by: 'AmountInGlobalCurrency', direction: #ASC }
+    ],
+    visualizations: [
+      { type: #AS_CHART, qualifier: 'FilterAmountByFund' }
+    ]
+  },
+    //Fiscal Year
+  {
+    qualifier: 'FilterAmountByFiscalYear',
+    text:      'Filter: Amount By Fiscal Year',
+    maxItems:  3,
+    sortOrder: [
+    { by: 'FiscalYear', direction: #ASC }
+      ],
+    visualizations: [
+      { type: #AS_CHART, qualifier: 'FilterAmountByFiscalYear' }
+    ]
+  },
+
+  // Budgeting Type
+  {
+    qualifier: 'FilterAmountByBudgetingType',
+    text:      'Filter: Amount by Budget Type',
+    maxItems:  3,
+    sortOrder: [
+      { by: 'AmountInGlobalCurrency', direction: #ASC }
+    ],
+    visualizations: [
+      { type: #AS_CHART, qualifier: 'FilterAmountByBudgetingType' }
+    ]
+  },
+  
+   //Cost Center
+  {
+    qualifier: 'FilterAmountByCostCenter',
+    text:      'Filter: Amount By Cost Center Year',
+    maxItems:  3,
+    sortOrder: [
+    { by: 'CostCenter', direction: #ASC }
+      ],
+    visualizations: [
+      { type: #AS_CHART, qualifier: 'FilterAmountByCostCenter' }
+    ]
+  }
+ ]
+
+
+@UI.selectionPresentationVariant: [
+
+{ qualifier: 'DefaultVariant', text: 'Budget', presentationVariantQualifier: 'DefaultPresentationVariant', selectionVariantQualifier: 'DefaultSelectionVariant' }
+]
+
+annotate view ZC_PubSecBdgtAnalysis_test
+ 
+  @UI.lineItem: [  { qualifier: 'Default', position: 10, importance: #HIGH, type: #STANDARD } ]
+  FiscalYear;
+  @UI.lineItem: [  { qualifier: 'Default', position: 20, importance: #HIGH, type: #STANDARD } ]
+  Fund;
+  @UI.lineItem: [  { qualifier: 'Default', position: 30, importance: #HIGH, type: #STANDARD } ]
+  BudgetPeriod;
+  @UI.lineItem: [  { qualifier: 'Default', position: 40, importance: #HIGH, type: #STANDARD } ]
+  CostCenter;
+  @UI.lineItem: [  { qualifier: 'Default', position: 50, importance: #HIGH, type: #STANDARD } ]
+  @UI.dataPoint: {     title: 'Amount in Global Currency'   }
+  AmountInGlobalCurrency;
+
+}
